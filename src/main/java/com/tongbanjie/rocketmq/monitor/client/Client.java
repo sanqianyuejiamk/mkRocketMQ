@@ -1,7 +1,8 @@
 package com.tongbanjie.rocketmq.monitor.client;
 
-import org.apache.log4j.Logger;
 import com.tongbanjie.rocketmq.monitor.constant.Constant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -16,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class Client {
 
-    private static final Logger log = Logger.getLogger(Client.class);
+    private static final Logger log = LoggerFactory.getLogger(Client.class);
 
     private long lastTimeFileSize = 0;  //上次文件大小
 
@@ -72,7 +73,7 @@ public class Client {
                 String tmp = "";
                 while ((tmp = randomFile.readLine()) != null) {
                     log.info("----------------, realtimeLogTask run...");
-                    System.out.println(new String(tmp.getBytes("ISO8859-1")));
+                    log.info(new String(tmp.getBytes("ISO8859-1")));
                     out.println(new String(tmp.getBytes("ISO8859-1")));
                     out.flush();
                 }
