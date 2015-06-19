@@ -16,6 +16,8 @@ public class MessageObserver implements RocketmqObserver {
 
     private static final Logger log = LoggerFactory.getLogger(MessageObserver.class);
 
+    private MessageObserver(){}
+
     @Override
     public void update(RocketmqSubject subject, Object arg) {
         log.info("MessageObserver receive subject message = "+arg);
@@ -24,6 +26,14 @@ public class MessageObserver implements RocketmqObserver {
     public void process(String content){
         JSONObject jsonObject = MonitorUtil.getMyLog(content);
 
+    }
+
+    public static MessageObserver getInitializer(){
+        return MessageObserverHolder.messageObserver_Holder;
+    }
+
+    private static class MessageObserverHolder{
+        private static MessageObserver messageObserver_Holder = new MessageObserver();
     }
 
 }

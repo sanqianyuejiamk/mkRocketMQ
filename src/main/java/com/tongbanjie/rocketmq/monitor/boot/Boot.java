@@ -17,14 +17,14 @@ public class Boot {
     public static void main(String[] args){
         String mode = System.getProperty("mode");
         logger.info("--------------, run boot mode = "+mode+" , server = "+System.getProperty("server")+" , mport = "+System.getProperty("mport")+" , log = "+System.getProperty("log"));
-        
+
         if(StringUtils.isBlank(mode)){
             logger.error("mode is blank!");
             return;
         }
         if("server".equals(mode)){
             startServer();
-        }else if("clent".equals(mode)){
+        }else if("client".equals(mode)){
             startClient();
         }
     }

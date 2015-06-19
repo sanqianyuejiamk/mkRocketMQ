@@ -1,6 +1,5 @@
 package com.tongbanjie.rocketmq.monitor.server;
 
-import com.tongbanjie.rocketmq.monitor.common.MQException;
 import com.tongbanjie.rocketmq.monitor.constant.Constant;
 import com.tongbanjie.rocketmq.monitor.server.observer.MessageObserver;
 import com.tongbanjie.rocketmq.monitor.server.observer.QueueObserver;
@@ -23,13 +22,14 @@ public class Server {
 
     private static Socket clientSocket;
 
-    private static RocketmqSubject rocketmqSubject = new RocketmqSubject();
+    private static RocketmqSubject rocketmqSubject = RocketmqSubject.getInitializer();
 
-    private static MessageObserver messageObserver = new MessageObserver();
+    private static MessageObserver messageObserver = MessageObserver.getInitializer();
 
     private static QueueObserver queueObserver = new QueueObserver();
 
     public static void start() throws Exception {
+        //添加观察者
         rocketmqSubject.addObserver(messageObserver);
 //        rocketmqSubject.addObserver(queueObserver);
         log.info("rocketmqSubject addObserver messageObserver!");
@@ -43,7 +43,7 @@ public class Server {
     }
 
     /**
-     *  转发消息给storm的spout
+     *  转发消息给observer
      *
      * @param client
      * @throws Exception

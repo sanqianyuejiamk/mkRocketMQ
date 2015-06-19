@@ -10,12 +10,11 @@ import java.util.Vector;
  */
 public class RocketmqSubject {
 
-
     private boolean changed = false;
 
     private Vector obs;
 
-    public RocketmqSubject() {
+    private RocketmqSubject() {
         obs = new Vector();
     }
 
@@ -82,5 +81,11 @@ public class RocketmqSubject {
         return obs.size();
     }
 
+    public static RocketmqSubject getInitializer(){
+        return RocketmqSubjectHolder.rocketmqSubject_Holder;
+    }
 
+    public static class RocketmqSubjectHolder{
+        private static RocketmqSubject rocketmqSubject_Holder = new RocketmqSubject();
+    }
 }
