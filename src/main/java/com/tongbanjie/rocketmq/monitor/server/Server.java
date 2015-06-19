@@ -1,5 +1,6 @@
 package com.tongbanjie.rocketmq.monitor.server;
 
+import com.tongbanjie.rocketmq.monitor.common.MQException;
 import com.tongbanjie.rocketmq.monitor.constant.Constant;
 import com.tongbanjie.rocketmq.monitor.server.observer.MessageObserver;
 import com.tongbanjie.rocketmq.monitor.server.observer.QueueObserver;
@@ -28,7 +29,7 @@ public class Server {
 
     private static QueueObserver queueObserver = new QueueObserver();
 
-    public static void main(String[] args) throws Exception {
+    public static void start() throws Exception {
         rocketmqSubject.addObserver(messageObserver);
 //        rocketmqSubject.addObserver(queueObserver);
         log.info("rocketmqSubject addObserver messageObserver!");

@@ -24,7 +24,7 @@ public class Client {
     private RandomAccessFile randomFile = null;
 
 
-    public static void main(String[] args) throws Exception {
+    public static void start() throws Exception {
         /**
          *  建立连接
          */

@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,6 +18,12 @@ public class MonitorUtil {
 
     private static final String MY_LOG = "#mq-monitor-%s#";
 
+    /**
+     *  获取日志内容
+     *
+     * @param content
+     * @return
+     */
     public static JSONObject getMyLog(String content){
         try{
             if(StringUtils.isBlank(content)){
@@ -37,13 +42,21 @@ public class MonitorUtil {
         return null;
     }
 
+    /**
+     *  生成日志内容
+     *
+     * @param key
+     * @param content
+     * @return
+     */
     public static String log(String key,String content){
         if(StringUtils.isBlank(content)){
             return null;
         }
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(key,content);
-        return String.format(MY_LOG, JSON.toJSONString(jsonObject));
+        String result = JSON.toJSONString(jsonObject);
+        return String.format(MY_LOG, result.replace("#",""));
     }
 
 }

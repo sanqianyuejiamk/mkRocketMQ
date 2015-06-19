@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ *  发送的message数据处理
+ *
  * User: mengka
  * Date: 15-6-13-下午9:25
  */
