@@ -14,18 +14,26 @@ import org.slf4j.LoggerFactory;
  */
 public class MessageObserver implements RocketmqObserver {
 
-    private static final Logger log = LoggerFactory.getLogger(MessageObserver.class);
+    private static final Logger logger = LoggerFactory.getLogger(MessageObserver.class);
 
     private MessageObserver(){}
 
     @Override
     public void update(RocketmqSubject subject, Object arg) {
-        log.info("MessageObserver receive subject message = "+arg);
+        logger.info("MessageObserver receive subject message = "+arg);
+        process(String.valueOf(arg));
     }
 
+    /**
+     *  处理message相关日志
+     *
+     * @param content
+     */
     public void process(String content){
         JSONObject jsonObject = MonitorUtil.getMyLog(content);
-
+        if(jsonObject.get("message-t")!=null){
+            logger.info("--------------, MessageObserver receive key = "+jsonObject.getString("message-t"));
+        }
     }
 
     public static MessageObserver getInitializer(){
