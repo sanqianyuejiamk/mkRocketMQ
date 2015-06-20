@@ -12,7 +12,9 @@ import com.alibaba.rocketmq.common.consumer.ConsumeFromWhere;
 import com.alibaba.rocketmq.common.message.MessageQueue;
 import com.alibaba.rocketmq.remoting.exception.RemotingException;
 import com.tongbanjie.mq.common.ConsumerTypeGroup;
+import com.tongbanjie.mq.message.BytesMessage;
 import com.tongbanjie.mq.message.Message;
+import com.tongbanjie.mq.message.StringMessage;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -118,10 +120,18 @@ public class DefaultNotifyManager implements NotifyManager {
     public SendResult sendMessage(Message message) {
         SendResult result = null;
         try {
+            byte[] body = null;
+            if (message instanceof BytesMessage) {
+                body = ((BytesMessage) message).getBody();
+            }else if(message instanceof StringMessage){
+                body = ((StringMessage) message).getBody().getBytes();
+            }else {
+                throw new IllegalArgumentException("message:" + message.getClass() + " not support");
+            }
             com.alibaba.rocketmq.common.message.Message msg = new com.alibaba.rocketmq.common.message.Message(topic,
                     tag,
                     message.getKeys(),
-                    message.getBody());
+                    body);
             result = producer.send(msg);
         }catch (Exception e){
             log.error("DefaultNotifyManager sendMessage error! message = "+ ToStringBuilder.reflectionToString(message),e);
