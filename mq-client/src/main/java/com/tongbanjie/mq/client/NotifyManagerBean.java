@@ -1,7 +1,10 @@
 package com.tongbanjie.mq.client;
 
+import com.alibaba.rocketmq.client.consumer.DefaultMQPullConsumer;
+import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
 import com.alibaba.rocketmq.client.consumer.PullResult;
 import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently;
+import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
 import com.alibaba.rocketmq.client.producer.SendResult;
 import com.alibaba.rocketmq.common.message.MessageQueue;
 import com.tongbanjie.mq.message.Message;
@@ -49,6 +52,21 @@ public class NotifyManagerBean implements NotifyManager {
     @Override
     public PullResult pullBlockIfNotFound(MessageQueue mq, String subExpression, long offset, int maxNums) throws Exception{
         return this.notifyManager.pullBlockIfNotFound(mq,subExpression,offset,maxNums);
+    }
+
+    @Override
+    public DefaultMQPullConsumer getPullConsumer() {
+        return this.notifyManager.getPullConsumer();
+    }
+
+    @Override
+    public DefaultMQPushConsumer getPushConsumer() {
+        return this.notifyManager.getPushConsumer();
+    }
+
+    @Override
+    public DefaultMQProducer getProducer() {
+        return this.notifyManager.getProducer();
     }
 
     public synchronized void init() {

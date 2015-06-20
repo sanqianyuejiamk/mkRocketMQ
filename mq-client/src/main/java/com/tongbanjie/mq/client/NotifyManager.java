@@ -1,7 +1,10 @@
 package com.tongbanjie.mq.client;
 
 
+import com.alibaba.rocketmq.client.consumer.DefaultMQPullConsumer;
+import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
 import com.alibaba.rocketmq.client.consumer.PullResult;
+import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
 import com.alibaba.rocketmq.client.producer.SendResult;
 import com.alibaba.rocketmq.common.message.MessageQueue;
 import com.tongbanjie.mq.message.Message;
@@ -23,4 +26,10 @@ public interface NotifyManager {
 
 
     public PullResult pullBlockIfNotFound(MessageQueue mq, String subExpression, long offset, int maxNums)throws Exception;
+
+    public abstract DefaultMQPullConsumer getPullConsumer();
+
+    public abstract DefaultMQPushConsumer getPushConsumer();
+
+    public abstract DefaultMQProducer getProducer();
 }

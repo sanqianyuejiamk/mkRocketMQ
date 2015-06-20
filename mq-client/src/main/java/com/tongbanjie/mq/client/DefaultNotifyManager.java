@@ -44,6 +44,8 @@ public class DefaultNotifyManager implements NotifyManager {
 
     private DefaultMQPullConsumer pullConsumer;
 
+    private DefaultMQPushConsumer pushConsumer;
+
     private DefaultMQProducer producer;
 
     public DefaultNotifyManager(String groupId, String name, String topic, String tag, String ctype, MessageListenerConcurrently messageListener, String namesrvAddr) {
@@ -102,7 +104,7 @@ public class DefaultNotifyManager implements NotifyManager {
      */
     private void init_pushConsumer() {
         try {
-            DefaultMQPushConsumer pushConsumer =
+            pushConsumer =
                     new DefaultMQPushConsumer(this.groupId);
             pushConsumer.setNamesrvAddr(this.namesrvAddr);
             pushConsumer.subscribe(topic,
@@ -147,5 +149,20 @@ public class DefaultNotifyManager implements NotifyManager {
     @Override
     public PullResult pullBlockIfNotFound(MessageQueue mq, String subExpression, long offset, int maxNums) throws MQClientException, RemotingException, MQBrokerException, InterruptedException {
         return pullConsumer.pullBlockIfNotFound(mq,subExpression,offset,maxNums);
+    }
+
+    public DefaultMQPullConsumer getPullConsumer()
+    {
+        return this.pullConsumer;
+    }
+
+    public DefaultMQPushConsumer getPushConsumer()
+    {
+        return this.pushConsumer;
+    }
+
+    public DefaultMQProducer getProducer()
+    {
+        return this.producer;
     }
 }
