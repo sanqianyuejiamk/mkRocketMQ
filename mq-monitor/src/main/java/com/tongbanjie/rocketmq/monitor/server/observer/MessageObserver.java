@@ -1,6 +1,7 @@
 package com.tongbanjie.rocketmq.monitor.server.observer;
 
 import com.alibaba.fastjson.JSONObject;
+import com.tongbanjie.rocketmq.monitor.constant.LogConstant;
 import com.tongbanjie.rocketmq.monitor.server.subject.RocketmqSubject;
 import com.tongbanjie.rocketmq.monitor.server.util.MonitorUtil;
 import org.slf4j.Logger;
@@ -20,7 +21,7 @@ public class MessageObserver implements RocketmqObserver {
 
     @Override
     public void update(RocketmqSubject subject, Object arg) {
-        logger.info("MessageObserver receive subject message = "+arg);
+        //logger.info("MessageObserver receive subject message = "+arg);
         process(String.valueOf(arg));
     }
 
@@ -31,8 +32,11 @@ public class MessageObserver implements RocketmqObserver {
      */
     public void process(String content){
         JSONObject jsonObject = MonitorUtil.getMyLog(content);
-        if(jsonObject.get("message-t")!=null){
-            logger.info("--------------, MessageObserver receive key = "+jsonObject.getString("message-t"));
+        if(jsonObject==null){
+            return;
+        }
+        if(jsonObject.get(LogConstant.K_SEND_MESSAGE)!=null){
+            logger.info("--------------, MessageObserver receive key = "+jsonObject.getString(LogConstant.K_SEND_MESSAGE));
         }
     }
 

@@ -30,7 +30,7 @@ public class MonitorUtil {
                 return null;
             }
             Pattern pattern = Pattern
-                    .compile("#mq-monitor-([0-9A-Za-z]*)#");
+                    .compile("#mq-monitor-(.*)#");
             Matcher matcher = pattern.matcher(content);
             if (matcher.find()) {
                 String data = matcher.group(1);

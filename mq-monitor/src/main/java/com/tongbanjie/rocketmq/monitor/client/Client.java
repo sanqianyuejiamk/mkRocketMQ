@@ -3,6 +3,7 @@ package com.tongbanjie.rocketmq.monitor.client;
 import com.tongbanjie.rocketmq.monitor.constant.Constant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,6 +14,13 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * 发送实时日志
+ *  <hr/>
+ * -Dlog=/Users/hyy044101331/logs/rocketmqlogs/broker.log
+ * -Dmode=client
+ * -Dmport=5679
+ * -Dserver=127.0.0.1
+ * <p/>
  * Created by mengka
  */
 public class Client {
@@ -72,8 +80,9 @@ public class Client {
 
                 String tmp = "";
                 while ((tmp = randomFile.readLine()) != null) {
-                    log.info("----------------, realtimeLogTask run...");
-                    log.info(new String(tmp.getBytes("ISO8859-1")));
+                    log.info("lastTimeFileSize = "+lastTimeFileSize);
+                    //log.info("----------------, realtimeLogTask run...");
+//                    log.info(new String(tmp.getBytes("ISO8859-1")));
                     out.println(new String(tmp.getBytes("ISO8859-1")));
                     out.flush();
                 }
