@@ -131,7 +131,7 @@ public class DefaultNotifyManager implements NotifyManager {
                 throw new IllegalArgumentException("message:" + message.getClass() + " not support");
             }
             com.alibaba.rocketmq.common.message.Message msg = new com.alibaba.rocketmq.common.message.Message(topic,
-                    tag,
+                    message.getTags(),
                     message.getKeys(),
                     body);
             result = producer.send(msg);
