@@ -13,11 +13,16 @@ import com.alibaba.rocketmq.common.message.MessageQueue;
 import com.alibaba.rocketmq.remoting.exception.RemotingException;
 import com.tongbanjie.mq.common.ConsumerTypeGroup;
 import com.tongbanjie.mq.message.BytesMessage;
+import com.tongbanjie.mq.message.DapperMessage;
 import com.tongbanjie.mq.message.Message;
 import com.tongbanjie.mq.message.StringMessage;
+import com.tongbanjie.mq.util.ObjectUtil;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -127,6 +132,11 @@ public class DefaultNotifyManager implements NotifyManager {
                 body = ((BytesMessage) message).getBody();
             }else if(message instanceof StringMessage){
                 body = ((StringMessage) message).getBody().getBytes();
+            }else if(message instanceof DapperMessage){
+                Map map = new HashMap();
+                map.put("body", ((DapperMessage) message).getBody());
+                map.put("attachment", ((DapperMessage) message).getAttachment());
+                body = ObjectUtil.changeObject2byte(map);
             }else {
                 throw new IllegalArgumentException("message:" + message.getClass() + " not support");
             }
