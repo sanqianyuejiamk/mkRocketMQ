@@ -1,5 +1,7 @@
 package com.tongbanjie.mq.message;
 
+import java.net.SocketAddress;
+
 /**
  * Created by xiafeng
  * on 2015/7/21.
@@ -17,6 +19,8 @@ public class DapperMessage extends Message{
     private int queueId;// 队列ID <PUT>
 
     private long queueOffset;// 队列偏移量
+
+    private SocketAddress bornHost; // 消息来自哪里 <PUT>
 
     public DapperMessage(){}
 
@@ -77,5 +81,13 @@ public class DapperMessage extends Message{
 
     public void setQueueOffset(long queueOffset) {
         this.queueOffset = queueOffset;
+    }
+
+    public SocketAddress getBornHost() {
+        return bornHost;
+    }
+
+    public void setBornHost(SocketAddress bornHost) {
+        this.bornHost = bornHost;
     }
 }

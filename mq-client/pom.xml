@@ -4,7 +4,7 @@
 
     <groupId>com.tongbanjie.mq</groupId>
     <artifactId>mq-client</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
 
     <name>mq-client</name>
     <url>http://maven.apache.org</url>

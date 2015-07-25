@@ -43,6 +43,7 @@ public abstract class MessageListenerDapper implements MessageListenerConcurrent
             dapperMessage.setQueueId(messageExt.getQueueId());
             dapperMessage.setQueueOffset(messageExt.getQueueOffset());
             dapperMessage.setFlag(messageExt.getFlag());
+            dapperMessage.setBornHost(messageExt.getBornHost());
             dapperMessages.add(dapperMessage);
         }
         return dapperMessages;
