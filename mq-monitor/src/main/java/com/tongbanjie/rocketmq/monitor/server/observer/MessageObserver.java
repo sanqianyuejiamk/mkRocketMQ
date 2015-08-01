@@ -1,9 +1,12 @@
 package com.tongbanjie.rocketmq.monitor.server.observer;
 
 import com.alibaba.fastjson.JSONObject;
+import com.tongbanjie.rocketmq.monitor.component.CloudStoreComponent;
+import com.tongbanjie.rocketmq.monitor.constant.Constant;
 import com.tongbanjie.rocketmq.monitor.constant.LogConstant;
 import com.tongbanjie.rocketmq.monitor.server.subject.RocketmqSubject;
 import com.tongbanjie.rocketmq.monitor.server.util.MonitorUtil;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +19,8 @@ import org.slf4j.LoggerFactory;
 public class MessageObserver implements RocketmqObserver {
 
     private static final Logger logger = LoggerFactory.getLogger(MessageObserver.class);
+
+    private static CloudStoreComponent cloudStoreComponent = CloudStoreComponent.getInitializer();
 
     private MessageObserver(){}
 
@@ -37,6 +42,12 @@ public class MessageObserver implements RocketmqObserver {
         }
         if(jsonObject.get(LogConstant.K_SEND_MESSAGE)!=null){
             logger.info("--------------, MessageObserver receive key = "+jsonObject.getString(LogConstant.K_SEND_MESSAGE));
+            if(jsonObject.getLong(LogConstant.K_CREATE_TIME)==null|| StringUtils.isBlank(jsonObject.getString(LogConstant.K_TOPIC))){
+                return;
+            }
+            Long score = jsonObject.getLong(LogConstant.K_CREATE_TIME);
+            String key = String.format(Constant.MQ_MONITOR_TOPIC,jsonObject.getString(LogConstant.K_TOPIC));
+            cloudStoreComponent.zaddString(key,score,jsonObject.getString(LogConstant.K_SEND_MESSAGE));
         }
     }
 

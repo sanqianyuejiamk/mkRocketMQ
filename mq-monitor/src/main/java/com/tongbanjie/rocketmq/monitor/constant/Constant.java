@@ -21,4 +21,16 @@ public class Constant {
      *  日志文件
      */
     public static final String LOG_PATH = System.getProperty("log");//"/Users/hyy044101331/logs/rocketmqlogs/broker.log";
+
+    /**
+     *  topic下当天的消息数
+     *     topic,20150801
+     */
+    public static final String MQ_MONITOR_TOPIC_TODAY = "mq_monitor_topic_today_%s_%s";
+
+    /**
+     *  topic下的消息
+     *
+     */
+    public static final String MQ_MONITOR_TOPIC = "mq_monitor_topic_%s";
 }
