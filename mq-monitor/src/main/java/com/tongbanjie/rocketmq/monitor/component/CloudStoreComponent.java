@@ -1,10 +1,12 @@
 package com.tongbanjie.rocketmq.monitor.component;
 
+import com.tongbanjie.rocketmq.monitor.constant.Constant;
+import com.tongbanjie.rocketmq.monitor.server.util.TimeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import redis.clients.jedis.JedisPool;
-
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -70,6 +72,21 @@ public class CloudStoreComponent {
      */
     public Set<String> zrangeByScoreString(String key,Integer fromValue,Integer toValue, int offset, int count){
         return redisClient.zrangeByScoreString(key,fromValue,toValue,offset,count);
+    }
+
+    /**
+     *  处理一条消息日志
+     *
+     * @param topic
+     * @param time
+     * @param msgId
+     */
+    public void processMessageObserverLog(String topic, Long time, String msgId){
+        String key = String.format(Constant.MQ_MONITOR_TOPIC,topic);
+        Date createTime = new Date(time);
+        String key2 = String.format(Constant.MQ_MONITOR_TOPIC_TODAY,topic,TimeUtil.toDate(createTime,TimeUtil.format_5));
+        zaddString(key, time, msgId);
+        incr(key2);//topic下的每天消息总数
     }
 
     public static CloudStoreComponent getInitializer(){
