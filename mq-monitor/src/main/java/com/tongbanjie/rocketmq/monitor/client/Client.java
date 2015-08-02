@@ -80,7 +80,7 @@ public class Client {
 
                 String tmp = "";
                 while ((tmp = randomFile.readLine()) != null) {
-                    log.info("lastTimeFileSize = "+lastTimeFileSize);
+                    //log.info("lastTimeFileSize = "+lastTimeFileSize);
                     //log.info("----------------, realtimeLogTask run...");
 //                    log.info(new String(tmp.getBytes("ISO8859-1")));
                     out.println(new String(tmp.getBytes("ISO8859-1")));

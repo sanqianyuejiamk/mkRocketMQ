@@ -1,6 +1,7 @@
 package com.tongbanjie.rocketmq.monitor.component;
 
 import com.tongbanjie.rocketmq.monitor.constant.Constant;
+import com.tongbanjie.rocketmq.monitor.constant.LogConstant;
 import com.tongbanjie.rocketmq.monitor.server.util.TimeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,6 +86,7 @@ public class CloudStoreComponent {
         String key = String.format(Constant.MQ_MONITOR_TOPIC,topic);
         Date createTime = new Date(time);
         String key2 = String.format(Constant.MQ_MONITOR_TOPIC_TODAY,topic,TimeUtil.toDate(createTime,TimeUtil.format_5));
+        logger.info("--------------, MessageObserver receive msgId = "+msgId+" , key2 = "+key2);
         zaddString(key, time, msgId);
         incr(key2);//topic下的每天消息总数
     }

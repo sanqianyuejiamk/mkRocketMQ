@@ -40,7 +40,6 @@ public class MessageObserver implements RocketmqObserver {
             return;
         }
         if(jsonObject.get(LogConstant.K_SEND_MESSAGE)!=null){
-            logger.info("--------------, MessageObserver receive key = "+jsonObject.getString(LogConstant.K_SEND_MESSAGE));
             if(jsonObject.getLong(LogConstant.K_CREATE_TIME)==null|| StringUtils.isBlank(jsonObject.getString(LogConstant.K_TOPIC))){
                 return;
             }
