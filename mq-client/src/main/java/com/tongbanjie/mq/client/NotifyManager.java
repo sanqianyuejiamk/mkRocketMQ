@@ -24,7 +24,16 @@ public interface NotifyManager {
      */
     public Set<MessageQueue> fetchSubscribeMessage()throws Exception;
 
-
+    /**
+     *  pull message
+     *
+     * @param mq
+     * @param subExpression
+     * @param offset
+     * @param maxNums 一次返回的消息maxNums
+     * @return
+     * @throws Exception
+     */
     public PullResult pullBlockIfNotFound(MessageQueue mq, String subExpression, long offset, int maxNums)throws Exception;
 
     public abstract DefaultMQPullConsumer getPullConsumer();
