@@ -18,7 +18,7 @@ import java.util.*;
 
 /**
  * User: mengka
- * Date: 15-8-6-20:00
+ * Date: 15-8-6
  */
 public class PullMessageManager implements InitializingBean {
 
@@ -27,6 +27,8 @@ public class PullMessageManager implements InitializingBean {
     private static final int MAX_NUMS = 32;//一次拉取的最多消息总数
 
     private static final long TIME_ONE_HOUR = 60 * 60 * 1000;
+
+    private static final long TIME_RECONSUMER = 60 * 1000;
 
     private static final Map<MessageQueue, Long> offseTable = new HashMap<MessageQueue, Long>();
 
@@ -45,6 +47,51 @@ public class PullMessageManager implements InitializingBean {
         Set<MessageQueue> messageQueues = consumerNotifyManager.fetchSubscribeMessage();
         for (MessageQueue messageQueue : messageQueues) {
             new Thread(new PullMessageTask(messageQueue),"thread_mq_"+messageQueue.getQueueId()).start();
+        }
+        new Thread(new ReconsumerMessageTask(),"thread_mq_reconsumer").start();
+    }
+
+    private class ReconsumerMessageTask implements Runnable{
+
+        @Override
+        public void run() {
+            while (true) {
+                try {
+                    logger.info("reconsumerMessageTask start...");
+                    List<MessageExt> messageExts = mqStoreComponent.getMessageExts();
+                    consumerMessageList(messageExts);
+
+                    Thread.sleep(TIME_RECONSUMER);
+                }catch (Exception e){
+                    logger.error("ReconsumerMessageTask error!",e);
+                }
+            }
+        }
+
+        public void consumerMessageList(List<MessageExt> list) throws Exception {
+            if (CollectionUtils.isEmpty(list)) {
+                return;
+            }
+            for (MessageExt msg : list) {
+                ConsumeConcurrentlyStatus status = consumeMessage(msg);
+                if (status == null) {
+                    logger.info("reconsumerMessageTask status is null! id = " + msg.getMsgId());
+                } else if (status == ConsumeConcurrentlyStatus.RECONSUME_LATER) {
+                    logger.info("reconsumerMessageTask RECONSUME_LATER message id = " + msg.getMsgId());
+                } else if (status == ConsumeConcurrentlyStatus.CONSUME_SUCCESS) {
+                    logger.info("reconsumerMessageTask consumeMessage success! msgId = " + msg.getMsgId() + " , status = " + status);
+                    mqStoreComponent.update(msg.getMsgId());
+                }
+            }
+        }
+
+        public ConsumeConcurrentlyStatus consumeMessage(MessageExt msg) {
+            try {
+                return messageListener.consumeMessage(msg);
+            }catch (Exception e){
+                logger.error("reconsumerMessageTask consumeMessage error! id = "+msg.getMsgId());
+            }
+            return null;
         }
     }
 
@@ -129,7 +176,12 @@ public class PullMessageManager implements InitializingBean {
         }
 
         public ConsumeConcurrentlyStatus consumeMessage(MessageExt msg) {
-            return messageListener.consumeMessage(msg);
+            try {
+                return messageListener.consumeMessage(msg);
+            }catch (Exception e){
+                logger.error("consumeMessage error! id = "+msg.getMsgId());
+            }
+            return null;
         }
 
         private long getMessageQueueOffset(MessageQueue mq) throws Exception {
