@@ -1,7 +1,6 @@
 package com.tongbanjie.rocketmq.monitor.component;
 
 import com.tongbanjie.rocketmq.monitor.constant.Constant;
-import com.tongbanjie.rocketmq.monitor.constant.LogConstant;
 import com.tongbanjie.rocketmq.monitor.server.util.TimeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
