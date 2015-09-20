@@ -43,7 +43,7 @@ public class MessageObserver implements RocketmqObserver {
             if(jsonObject.getLong(LogConstant.K_CREATE_TIME)==null|| StringUtils.isBlank(jsonObject.getString(LogConstant.K_TOPIC))){
                 return;
             }
-            cloudStoreComponent.processMessageObserverLog(jsonObject.getString(LogConstant.K_TOPIC), jsonObject.getLong(LogConstant.K_CREATE_TIME), jsonObject.getString(LogConstant.K_SEND_MESSAGE));
+            cloudStoreComponent.processMessageObserverLog(jsonObject.getString(LogConstant.K_TOPIC), jsonObject.getLong(LogConstant.K_CREATE_TIME), jsonObject.getString(LogConstant.K_SEND_MESSAGE),jsonObject.getString(LogConstant.K_BROKER_NAME));
         }
     }
 

@@ -14,4 +14,6 @@ public class LogConstant {
 
     public static final String K_BROKER_NAME = "brokerName";//监控日志-broker
 
+    public static final String K_BROKER_IP = "brokerIp";//监控日志-broker
+
 }

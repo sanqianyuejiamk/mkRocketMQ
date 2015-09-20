@@ -33,4 +33,10 @@ public class Constant {
      *
      */
     public static final String MQ_MONITOR_TOPIC = "mq_monitor_topic_%s";
+
+    /**
+     *  broker&topic下的消息
+     *
+     */
+    public static final String MQ_MONITOR_TOPIC_BROKER = "mq_monitor_topic_%s_%s";
 }

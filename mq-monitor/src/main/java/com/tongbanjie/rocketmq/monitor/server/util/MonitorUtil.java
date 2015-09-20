@@ -3,11 +3,13 @@ package com.tongbanjie.rocketmq.monitor.server.util;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.tongbanjie.rocketmq.monitor.constant.LogConstant;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -65,4 +67,25 @@ public class MonitorUtil {
         return String.format(MY_LOG, result.replace("#",""));
     }
 
+    public static String log(String type,String[] keys,String... values){
+        if(keys.length<=0||values.length<=0){
+            return null;
+        }
+        JSONObject jsonObject = new JSONObject();
+        for(int i=0;i<keys.length;i++){
+            jsonObject.put(keys[i], values[i]);
+        }
+        jsonObject.put(LogConstant.K_CREATE_TIME,new Date().getTime());
+        String result = JSON.toJSONString(jsonObject);
+        return String.format(MY_LOG, result.replace("#",""));
+    }
+
+    public static String[] getKeys(){
+        String[] keys = new String[4];
+        keys[0] = LogConstant.K_SEND_MESSAGE;
+        keys[1] = LogConstant.K_TOPIC;
+        keys[2] = LogConstant.K_BROKER_NAME;
+        keys[3] = LogConstant.K_BROKER_IP;
+        return keys;
+    }
 }
