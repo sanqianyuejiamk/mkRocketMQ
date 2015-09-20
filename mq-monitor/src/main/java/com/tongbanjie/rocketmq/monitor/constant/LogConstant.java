@@ -11,4 +11,7 @@ public class LogConstant {
     public static final String K_CREATE_TIME = "createTime";//监控日志-发送时间
 
     public static final String K_TOPIC = "topic";//监控日志-topic
+
+    public static final String K_BROKER_NAME = "brokerName";//监控日志-broker
+
 }

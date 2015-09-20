@@ -52,7 +52,7 @@ public class MonitorUtil {
      * @param content
      * @return
      */
-    public static String log(String key,String content,String topic){
+    public static String log(String key,String content,String topic,String brokerName){
         if(StringUtils.isBlank(content)){
             return null;
         }
@@ -60,6 +60,7 @@ public class MonitorUtil {
         jsonObject.put(key,content);
         jsonObject.put(LogConstant.K_CREATE_TIME,new Date().getTime());
         jsonObject.put(LogConstant.K_TOPIC,topic);
+        jsonObject.put(LogConstant.K_BROKER_NAME,brokerName);
         String result = JSON.toJSONString(jsonObject);
         return String.format(MY_LOG, result.replace("#",""));
     }
