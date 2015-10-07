@@ -86,7 +86,7 @@ public class CloudStoreComponent {
         String brokerKey = String.format(Constant.MQ_MONITOR_TOPIC_BROKER,brokerName,topic);
         Date createTime = new Date(time);
         String key2 = String.format(Constant.MQ_MONITOR_TOPIC_TODAY,topic,TimeUtil.toDate(createTime,TimeUtil.format_5));
-        logger.info("--------------, MessageObserver receive msgId = "+msgId+" , key2 = "+key2);
+        logger.info("MessageObserver receive msgId = "+msgId+" , key2 = "+key2);
         zaddString(key, time, msgId);
         zaddString(brokerKey, time, msgId);
         incr(key2);//topic下的每天消息总数
