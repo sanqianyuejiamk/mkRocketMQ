@@ -1,4 +1,4 @@
 # mq-client
 ---
-1.RocketMQ·¢ËÍÏûÏ¢-pull·½Ê½
-2.¼ÇÂ¼Ïû·Ñ¸ÃÌõÏûÏ¢msgIdµÄÏû·ÑÕßµÄconsumer ip
+1. RocketMQå‘é€æ¶ˆæ¯-pullæ–¹å¼
+2. è®°å½•æ¶ˆè´¹è¯¥æ¡æ¶ˆæ¯msgIdçš„æ¶ˆè´¹è€…çš„consumer ip
