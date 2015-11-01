@@ -4,6 +4,7 @@
 2. RocketMQ发送消息-push方式
 3. 记录消费该条消息msgId的消费者的consumer ip
 4. 添加redis开关，监控broker消息
+5. topic下的redis未消费msgId，定期重发
 
 
 
