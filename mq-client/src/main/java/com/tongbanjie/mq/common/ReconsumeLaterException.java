@@ -1,7 +1,7 @@
 package com.tongbanjie.mq.common;
 
 /**
- * User: mengka
+ * User: xiafeng
  * Date: 15-8-6-22:18
  */
 public class ReconsumeLaterException extends Exception {

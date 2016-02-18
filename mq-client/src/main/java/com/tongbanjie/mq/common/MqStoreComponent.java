@@ -39,6 +39,7 @@ public class MqStoreComponent {
         statement = connection.createStatement();
         List<MessageExt> list = new ArrayList<MessageExt>();
         try{
+            createTable(SQLConstant.MQ_TABLE_NAME,SQLConstant.MQ_ATTRIBUTE_ID,SQLConstant.MQ_ATTRIBUTE_CONTENT,SQLConstant.MQ_ATTRIBUTE_TAGS,SQLConstant.MQ_ATTRIBUTE_KEYS,SQLConstant.MQ_ATTRIBUTE_STATUS);
 
             String sql = "SELECT * FROM mq_message where status=0;";
             ResultSet rs = statement.executeQuery(sql);
@@ -171,7 +172,6 @@ public class MqStoreComponent {
         try{
             List<String> tables = showTables();
             if(tables.contains(tableName.toUpperCase())){
-                logger.info("exists table "+tableName);
                 isExistsTable = true;
             }
         }catch (Exception e){

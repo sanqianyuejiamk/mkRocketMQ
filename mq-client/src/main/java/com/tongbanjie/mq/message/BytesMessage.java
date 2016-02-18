@@ -1,7 +1,7 @@
 package com.tongbanjie.mq.message;
 
 /**
- * User: mengka
+ * User: xiafeng
  * Date: 15-6-20-上午10:20
  */
 public class BytesMessage extends Message {
@@ -31,5 +31,10 @@ public class BytesMessage extends Message {
 
     public void setBody(byte[] body) {
         this.body = body;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("BytesMessage [ keys=%s , tags=%s , body=%s]",this.getKeys(),this.getTags(),body != null ? body.length : 0);
     }
 }

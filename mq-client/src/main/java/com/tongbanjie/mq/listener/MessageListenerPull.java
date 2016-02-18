@@ -5,7 +5,7 @@ import com.alibaba.rocketmq.client.consumer.listener.MessageListener;
 import com.alibaba.rocketmq.common.message.MessageExt;
 
 /**
- * User: mengka
+ * User: xiafeng
  * Date: 15-8-6-20:46
  */
 public interface MessageListenerPull extends MessageListener {

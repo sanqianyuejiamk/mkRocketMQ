@@ -1,23 +1,31 @@
 package com.tongbanjie.mq.listener;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
+
 import com.alibaba.rocketmq.client.consumer.DefaultMQPullConsumer;
 import com.alibaba.rocketmq.client.consumer.PullResult;
 import com.alibaba.rocketmq.client.consumer.PullStatus;
 import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import com.alibaba.rocketmq.common.message.MessageExt;
 import com.alibaba.rocketmq.common.message.MessageQueue;
+import com.alibaba.rocketmq.remoting.exception.RemotingTimeoutException;
 import com.tongbanjie.mq.client.NotifyManager;
 import com.tongbanjie.mq.common.MqStoreComponent;
 import com.tongbanjie.mq.common.ReconsumeLaterException;
-import org.apache.commons.collections.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
-
-import java.util.*;
 
 /**
- * User: mengka
+ * User: xiafeng
  * Date: 15-8-6
  */
 public class PullMessageManager implements InitializingBean {
@@ -30,9 +38,14 @@ public class PullMessageManager implements InitializingBean {
 
     private static final long TIME_RECONSUMER = 60 * 1000;
 
+    private static final long TIME_REPULL = 30 * 1000;
+
     private static final Map<MessageQueue, Long> offseTable = new HashMap<MessageQueue, Long>();
 
     private static MqStoreComponent mqStoreComponent = MqStoreComponent.getMqStoreComponent();
+
+    public static final ExecutorService EXECUTOR_SERVICE = Executors
+            .newCachedThreadPool();
 
     private NotifyManager consumerNotifyManager;
 
@@ -45,10 +58,13 @@ public class PullMessageManager implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         Set<MessageQueue> messageQueues = consumerNotifyManager.fetchSubscribeMessage();
+        final Semaphore SEMAPHORE = new Semaphore(messageQueues.size());
         for (MessageQueue messageQueue : messageQueues) {
-            new Thread(new PullMessageTask(messageQueue),"thread_mq_"+messageQueue.getQueueId()).start();
+            EXECUTOR_SERVICE.execute(new PullMessageTask(messageQueue,SEMAPHORE,"thread_mq_"+messageQueue.getQueueId()));
         }
         new Thread(new ReconsumerMessageTask(),"thread_mq_reconsumer").start();
+
+        EXECUTOR_SERVICE.shutdown();
     }
 
     private class ReconsumerMessageTask implements Runnable{
@@ -57,7 +73,7 @@ public class PullMessageManager implements InitializingBean {
         public void run() {
             while (true) {
                 try {
-                    logger.info("reconsumerMessageTask start...");
+                    logger.debug("reconsumerMessageTask start...");
                     List<MessageExt> messageExts = mqStoreComponent.getMessageExts();
                     consumerMessageList(messageExts);
 
@@ -75,11 +91,11 @@ public class PullMessageManager implements InitializingBean {
             for (MessageExt msg : list) {
                 ConsumeConcurrentlyStatus status = consumeMessage(msg);
                 if (status == null) {
-                    logger.info("reconsumerMessageTask status is null! id = " + msg.getMsgId());
+                    logger.debug("reconsumerMessageTask status is null! id = " + msg.getMsgId());
                 } else if (status == ConsumeConcurrentlyStatus.RECONSUME_LATER) {
-                    logger.info("reconsumerMessageTask RECONSUME_LATER message id = " + msg.getMsgId());
+                    logger.debug("reconsumerMessageTask RECONSUME_LATER message id = " + msg.getMsgId());
                 } else if (status == ConsumeConcurrentlyStatus.CONSUME_SUCCESS) {
-                    logger.info("reconsumerMessageTask consumeMessage success! msgId = " + msg.getMsgId() + " , status = " + status);
+                    logger.debug("reconsumerMessageTask consumeMessage success! msgId = " + msg.getMsgId() + " , status = " + status);
                     mqStoreComponent.update(msg.getMsgId());
                 }
             }
@@ -89,7 +105,7 @@ public class PullMessageManager implements InitializingBean {
             try {
                 return messageListener.consumeMessage(msg);
             }catch (Exception e){
-                logger.error("reconsumerMessageTask consumeMessage error! id = "+msg.getMsgId());
+                logger.error("reconsumerMessageTask consumeMessage error! id = "+msg.getMsgId(), e);
             }
             return null;
         }
@@ -102,32 +118,40 @@ public class PullMessageManager implements InitializingBean {
 
         private MessageQueue messageQueue;//当前队列
 
-        public PullMessageTask(MessageQueue messageQueue) {
+        private String taskName;
+
+        private Semaphore semaphore;
+
+        public PullMessageTask(MessageQueue messageQueue,Semaphore semaphore,String taskName) {
             this.messageQueue = messageQueue;
+            this.semaphore = semaphore;
+            this.taskName = taskName;
         }
 
         @Override
         public void run() {
             SINGLE_MQ:
             while (true) {
-                logger.info("pullMessageTask running topic = " + messageQueue.getTopic() +" , thread["+Thread.currentThread().getId()+"] = "+Thread.currentThread().getName() +" , broker = " + messageQueue.getBrokerName() + " , queueId = " + messageQueue.getQueueId());
+                logger.debug("pullMessageTask running topic = " + messageQueue.getTopic() + " , thread[" + Thread.currentThread().getId() + "] = " + taskName + " , broker = " + messageQueue.getBrokerName() + " , queueId = " + messageQueue.getQueueId());
                 try {
+                    semaphore.acquire();
+
                     long offset = getMessageQueueOffset(messageQueue);
                     PullResult pullResult =
                             consumerNotifyManager.pullBlockIfNotFound(messageQueue, null, offset < 0 ? 0 : offset, MAX_NUMS);
 
                     if (pullResult.getPullStatus() == PullStatus.FOUND) {
-                        logger.info("pullBlockIfNotFound status = " + pullResult.getPullStatus() + " , offset = " + pullResult.getNextBeginOffset());
+                        logger.debug("pullBlockIfNotFound status = " + pullResult.getPullStatus() + " , offset = " + pullResult.getNextBeginOffset());
                         consumerMessageList(pullResult.getMsgFoundList());
                     } else if (pullResult.getPullStatus() == PullStatus.NO_NEW_MSG) {
-                        logger.info("pullBlockIfNotFound-#no new message,quit while#");
+                        logger.debug("pullBlockIfNotFound-#no new message,quit while#");
 //                        break SINGLE_MQ;
                     } else if (pullResult.getPullStatus() == PullStatus.NO_MATCHED_MSG) {
-                        logger.info("pullBlockIfNotFound-#NO_MATCHED_MSG#");
+                        logger.debug("pullBlockIfNotFound-#NO_MATCHED_MSG#");
                     } else if (pullResult.getPullStatus() == PullStatus.OFFSET_ILLEGAL) {
-                        logger.info("pullBlockIfNotFound-#OFFSET_ILLEGAL#");
+                        logger.debug("pullBlockIfNotFound-#OFFSET_ILLEGAL#");
                     } else {
-                        logger.info("pullBlockIfNotFound-#other#");
+                        logger.debug("pullBlockIfNotFound-#other#");
                     }
 
                     //update offset
@@ -135,12 +159,17 @@ public class PullMessageManager implements InitializingBean {
                     //sleep spaceTime
                     if(spaceTime>0) {
                         spaceTime = spaceTime > TIME_ONE_HOUR ? TIME_ONE_HOUR : spaceTime;
+                        spaceTime = spaceTime < TIME_REPULL ? TIME_REPULL : spaceTime;
                         Thread.sleep(spaceTime);
                     }
                 } catch (ReconsumeLaterException e) {
-                    logger.info("Reconsume Later...");
-                } catch (Exception e) {
+                    logger.debug("Reconsume Later...");
+                } catch (RemotingTimeoutException e){
+//                    logger.debug("nothing new message...");
+                }catch (Exception e) {
                     logger.error("pullMessageTask error! ", e);
+                }finally {
+                    semaphore.release();
                 }
             }
         }
@@ -152,13 +181,13 @@ public class PullMessageManager implements InitializingBean {
             for (MessageExt msg : list) {
                 ConsumeConcurrentlyStatus status = consumeMessage(msg);
                 if (status == null) {
-                    logger.info("status is null! id = " + msg.getMsgId());
+                    logger.debug("status is null! id = " + msg.getMsgId());
                     mqStoreComponent.saveMessageExt(msg);
                 } else if (status == ConsumeConcurrentlyStatus.RECONSUME_LATER) {
-                    logger.info("RECONSUME_LATER message id = " + msg.getMsgId());
+                    logger.debug("RECONSUME_LATER message id = " + msg.getMsgId());
                     mqStoreComponent.saveMessageExt(msg);
                 } else if (status == ConsumeConcurrentlyStatus.CONSUME_SUCCESS) {
-                    logger.info("consumeMessage success! msgId = " + msg.getMsgId() + " , status = " + status);
+                    logger.debug("consumeMessage success! msgId = " + msg.getMsgId() + " , status = " + status);
                 }
             }
         }
@@ -172,23 +201,23 @@ public class PullMessageManager implements InitializingBean {
         private void putMessageQueueOffset(MessageQueue mq, long offset) throws Exception {
             offseTable.put(mq, offset);
             pullConsumer.updateConsumeOffset(mq, offset);
-            logger.info("update offset queue = " + messageQueue.getQueueId() + " , offset = " + offset);
+            logger.debug("update offset queue = " + messageQueue.getQueueId() + " , offset = " + offset);
         }
 
         public ConsumeConcurrentlyStatus consumeMessage(MessageExt msg) {
             try {
                 return messageListener.consumeMessage(msg);
             }catch (Exception e){
-                logger.error("consumeMessage error! id = "+msg.getMsgId());
+                logger.error("consumeMessage error! id = "+msg.getMsgId(), e);
             }
             return null;
         }
 
         private long getMessageQueueOffset(MessageQueue mq) throws Exception {
             Long offset = offseTable.get(mq);
-            logger.info("#offseTable get queue = " + mq.getQueueId() + " , offset = " + offset + "#");
+            logger.debug("#offseTable get queue = " + mq.getQueueId() + " , offset = " + offset + "#");
             if (offset != null) {
-                System.out.println("getMessageQueueOffset = " + offset);
+            	logger.debug("getMessageQueueOffset = " + offset);
                 return offset;
             }
             return pullConsumer.fetchConsumeOffset(mq, false);

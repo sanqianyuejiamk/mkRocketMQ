@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * User: mengka
+ * User: xiafeng
  * Date: 15-8-6-21:59
  */
 public class PullMessageInitialize {

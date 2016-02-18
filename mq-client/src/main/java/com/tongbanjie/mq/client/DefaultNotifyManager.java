@@ -146,7 +146,7 @@ public class DefaultNotifyManager implements NotifyManager {
                     body);
             result = producer.send(msg);
         }catch (Exception e){
-            log.error("DefaultNotifyManager sendMessage error! message = "+ ToStringBuilder.reflectionToString(message),e);
+            log.error("DefaultNotifyManager sendMessage error!",e);
         }
         return result;
     }

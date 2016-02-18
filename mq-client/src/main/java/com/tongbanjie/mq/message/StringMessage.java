@@ -1,7 +1,7 @@
 package com.tongbanjie.mq.message;
 
 /**
- * User: mengka
+ * User: xiafeng
  * Date: 15-6-20-上午10:04
  */
 public class StringMessage extends Message {
@@ -31,5 +31,10 @@ public class StringMessage extends Message {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("StringMessage [ keys=%s , tags=%s , body=%s]",this.getKeys(),this.getTags(),this.getBody());
     }
 }
