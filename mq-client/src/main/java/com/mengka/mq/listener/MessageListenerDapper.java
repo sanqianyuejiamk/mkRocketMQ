@@ -1,14 +1,12 @@
-package com.tongbanjie.mq.listener;
+package com.mengka.mq.listener;
 
 import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import com.alibaba.rocketmq.common.message.MessageExt;
-import com.tongbanjie.mq.message.DapperMessage;
-import com.tongbanjie.mq.util.ObjectUtil;
+import com.mengka.mq.message.DapperMessage;
+import com.mengka.mq.util.ObjectUtil;
 
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

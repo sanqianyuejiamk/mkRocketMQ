@@ -1,4 +1,4 @@
-package com.tongbanjie.mq.client;
+package com.mengka.mq.client;
 
 
 import com.alibaba.rocketmq.client.consumer.DefaultMQPullConsumer;
@@ -7,7 +7,7 @@ import com.alibaba.rocketmq.client.consumer.PullResult;
 import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
 import com.alibaba.rocketmq.client.producer.SendResult;
 import com.alibaba.rocketmq.common.message.MessageQueue;
-import com.tongbanjie.mq.message.Message;
+import com.mengka.mq.message.Message;
 import java.util.Set;
 
 public interface NotifyManager {

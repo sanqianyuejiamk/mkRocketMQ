@@ -1,4 +1,4 @@
-package com.tongbanjie.mq.listener;
+package com.mengka.mq.listener;
 
 import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import com.alibaba.rocketmq.client.consumer.listener.MessageListener;

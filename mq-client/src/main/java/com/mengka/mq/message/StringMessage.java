@@ -1,4 +1,4 @@
-package com.tongbanjie.mq.message;
+package com.mengka.mq.message;
 
 /**
  * User: xiafeng

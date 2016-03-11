@@ -1,4 +1,4 @@
-package com.tongbanjie.mq.common;
+package com.mengka.mq.common;
 
 
 public class SQLConstant {

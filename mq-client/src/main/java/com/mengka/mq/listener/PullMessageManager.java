@@ -1,4 +1,4 @@
-package com.tongbanjie.mq.listener;
+package com.mengka.mq.listener;
 
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +8,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 
+import com.mengka.mq.client.NotifyManager;
+import com.mengka.mq.common.MqStoreComponent;
+import com.mengka.mq.common.ReconsumeLaterException;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +23,6 @@ import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import com.alibaba.rocketmq.common.message.MessageExt;
 import com.alibaba.rocketmq.common.message.MessageQueue;
 import com.alibaba.rocketmq.remoting.exception.RemotingTimeoutException;
-import com.tongbanjie.mq.client.NotifyManager;
-import com.tongbanjie.mq.common.MqStoreComponent;
-import com.tongbanjie.mq.common.ReconsumeLaterException;
 
 /**
  * User: xiafeng

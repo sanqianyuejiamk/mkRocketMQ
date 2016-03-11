@@ -1,4 +1,4 @@
-package com.tongbanjie.mq.listener;
+package com.mengka.mq.listener;
 
 import com.alibaba.rocketmq.common.message.MessageExt;
 import org.apache.commons.collections.CollectionUtils;

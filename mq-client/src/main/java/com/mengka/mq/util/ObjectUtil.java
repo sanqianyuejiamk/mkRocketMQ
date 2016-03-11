@@ -1,4 +1,4 @@
-package com.tongbanjie.mq.util;
+package com.mengka.mq.util;
 
 import java.io.*;
 import org.apache.commons.logging.Log;

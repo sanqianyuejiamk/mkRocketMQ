@@ -1,4 +1,4 @@
-package com.tongbanjie.mq.common;
+package com.mengka.mq.common;
 
 import com.alibaba.rocketmq.common.message.MessageExt;
 import org.slf4j.Logger;
