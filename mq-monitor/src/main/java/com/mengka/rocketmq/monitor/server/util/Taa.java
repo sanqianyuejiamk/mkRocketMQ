@@ -1,4 +1,4 @@
-package com.tongbanjie.rocketmq.monitor.server.util;
+package com.mengka.rocketmq.monitor.server.util;
 
 import com.alibaba.fastjson.JSONObject;
 

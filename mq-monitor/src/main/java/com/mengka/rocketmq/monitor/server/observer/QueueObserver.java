@@ -1,6 +1,6 @@
-package com.tongbanjie.rocketmq.monitor.server.observer;
+package com.mengka.rocketmq.monitor.server.observer;
 
-import com.tongbanjie.rocketmq.monitor.server.subject.RocketmqSubject;
+import com.mengka.rocketmq.monitor.server.subject.RocketmqSubject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

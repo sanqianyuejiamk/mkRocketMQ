@@ -1,4 +1,4 @@
-package com.tongbanjie.rocketmq.monitor.server.util;
+package com.mengka.rocketmq.monitor.server.util;
 
 import org.apache.commons.lang.StringUtils;
 import java.text.SimpleDateFormat;

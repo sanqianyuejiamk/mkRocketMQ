@@ -1,7 +1,7 @@
-package com.tongbanjie.rocketmq.monitor.component;
+package com.mengka.rocketmq.monitor.component;
 
-import com.tongbanjie.rocketmq.monitor.constant.Constant;
-import com.tongbanjie.rocketmq.monitor.server.util.TimeUtil;
+import com.mengka.rocketmq.monitor.constant.Constant;
+import com.mengka.rocketmq.monitor.server.util.TimeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;

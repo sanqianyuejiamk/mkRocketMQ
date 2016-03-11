@@ -1,4 +1,4 @@
-package com.tongbanjie.rocketmq.monitor.common;
+package com.mengka.rocketmq.monitor.common;
 
 /**
  * User: mengka

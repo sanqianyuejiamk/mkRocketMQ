@@ -1,7 +1,7 @@
-package com.tongbanjie.rocketmq.monitor.boot;
+package com.mengka.rocketmq.monitor.boot;
 
-import com.tongbanjie.rocketmq.monitor.client.Client;
-import com.tongbanjie.rocketmq.monitor.server.Server;
+import com.mengka.rocketmq.monitor.client.Client;
+import com.mengka.rocketmq.monitor.server.Server;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

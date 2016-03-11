@@ -1,4 +1,4 @@
-package com.tongbanjie.rocketmq.monitor.constant;
+package com.mengka.rocketmq.monitor.constant;
 
 /**
  * User: mengka

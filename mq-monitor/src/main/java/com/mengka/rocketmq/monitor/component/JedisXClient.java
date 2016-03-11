@@ -1,4 +1,4 @@
-package com.tongbanjie.rocketmq.monitor.component;
+package com.mengka.rocketmq.monitor.component;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;

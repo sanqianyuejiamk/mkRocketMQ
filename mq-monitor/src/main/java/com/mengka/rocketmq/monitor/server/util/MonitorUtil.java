@@ -1,15 +1,13 @@
-package com.tongbanjie.rocketmq.monitor.server.util;
+package com.mengka.rocketmq.monitor.server.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.tongbanjie.rocketmq.monitor.constant.LogConstant;
-import org.apache.commons.collections.CollectionUtils;
+import com.mengka.rocketmq.monitor.constant.LogConstant;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
